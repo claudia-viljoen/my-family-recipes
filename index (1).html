@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Family Recipe Box</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Karla:wght@400;500;700&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sage: #6B7C63;
+    --sage-dark: #4B5A44;
+    --ivory: #FBF6EA;
+    --ivory-line: rgba(46,42,34,0.09);
+    --red-rule: #B3413A;
+    --ink: #2E2A22;
+    --ink-soft: #635C4C;
+    --mustard: #D3A23B;
+    --herb: #56724A;
+    --plum: #7A4B5C;
+    --shadow: 0 10px 24px rgba(30,26,18,0.18);
+  }
+
+  * { box-sizing: border-box; }
+
+  body{
+    margin:0;
+    background: var(--sage);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(255,255,255,0.06), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(0,0,0,0.08), transparent 45%);
+    color: var(--ink);
+    font-family:'Karla', sans-serif;
+    min-height:100vh;
+  }
+
+  /* ---------- Header ---------- */
+  header{
+    padding: 56px 20px 28px;
+    text-align:center;
+    color: var(--ivory);
+  }
+  header .eyebrow{
+    font-family:'Special Elite', monospace;
+    letter-spacing:3px;
+    font-size:12px;
+    text-transform:uppercase;
+    opacity:0.75;
+    margin-bottom:10px;
+  }
+  header h1{
+    font-family:'Special Elite', monospace;
+    font-size: clamp(32px, 6vw, 56px);
+    margin:0 0 10px;
+    text-shadow: 0 2px 0 rgba(0,0,0,0.15);
+  }
+  header p.tagline{
+    font-family:'Caveat', cursive;
+    font-size: 26px;
+    margin:0;
+    color: #EFE7D2;
+  }
+
+  /* ---------- Toolbar ---------- */
+  .toolbar{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 20px 8px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .tabs{
+    display:flex;
+    flex-wrap:wrap;
+    gap:6px;
+  }
+  .tab{
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    background: var(--ivory);
+    color: var(--ink);
+    border:none;
+    padding:9px 16px 7px;
+    border-radius: 6px 6px 0 0;
+    cursor:pointer;
+    transform: translateY(4px);
+    opacity:0.82;
+    transition: transform .15s ease, opacity .15s ease;
+    box-shadow: 0 -2px 0 rgba(0,0,0,0.05) inset;
+  }
+  .tab:hover{ opacity:1; transform: translateY(1px); }
+  .tab.active{
+    opacity:1;
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  }
+
+  .search-wrap{
+    display:flex;
+    align-items:center;
+    background: var(--ivory);
+    border-radius: 8px;
+    padding: 8px 14px;
+    box-shadow: var(--shadow);
+    gap:8px;
+  }
+  .search-wrap input{
+    border:none;
+    outline:none;
+    background:transparent;
+    font-family:'Karla', sans-serif;
+    font-size:14px;
+    width: 170px;
+    color: var(--ink);
+  }
+
+  /* ---------- Demo banner ---------- */
+  .demo-banner{
+    max-width: 980px;
+    margin: 8px auto 0;
+    padding: 12px 18px;
+    background: #F3E4B8;
+    border: 1px dashed #A9822F;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #4A3B12;
+    text-align:center;
+  }
+  .demo-banner code{ background: rgba(0,0,0,0.08); padding:1px 5px; border-radius:4px; }
+
+  /* ---------- Card Grid ---------- */
+  main{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 28px 20px 100px;
+    display:grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 34px 26px;
+  }
+
+  .card{
+    position:relative;
+    background: var(--ivory);
+    border-radius: 3px;
+    padding: 18px 16px 16px 34px;
+    cursor:pointer;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent 0px, transparent 27px, var(--ivory-line) 28px
+    );
+    background-position: 0 46px;
+    box-shadow: var(--shadow);
+    transition: transform .18s ease, box-shadow .18s ease;
+    min-height: 240px;
+  }
+  .card::before{
+    /* red margin rule */
+    content:"";
+    position:absolute;
+    top:0; bottom:0; left:22px;
+    width:2px;
+    background: var(--red-rule);
+    opacity: 0.55;
+  }
+  .card:nth-child(3n+1){ transform: rotate(-1.1deg); }
+  .card:nth-child(3n+2){ transform: rotate(0.8deg); }
+  .card:nth-child(3n){ transform: rotate(-0.4deg); }
+  .card:hover{
+    transform: rotate(0deg) translateY(-4px);
+    box-shadow: 0 18px 30px rgba(20,16,10,0.28);
+    z-index:2;
+  }
+
+  .card .tag{
+    position:absolute;
+    top:-10px; right:14px;
+    font-family:'Special Elite', monospace;
+    font-size:11px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    color:#fff;
+    padding: 5px 10px 4px;
+    border-radius: 3px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  }
+
+  .card img{
+    width:100%;
+    height:130px;
+    object-fit:cover;
+    border-radius:2px;
+    margin-bottom:10px;
+    display:block;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .card .photo-fallback{
+    width:100%;
+    height:130px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:38px;
+    background: repeating-linear-gradient(45deg, #EFE7D2, #EFE7D2 10px, #E7DDC2 10px, #E7DDC2 20px);
+    border-radius:2px;
+    margin-bottom:10px;
+  }
+
+  .card h3{
+    font-family:'Special Elite', monospace;
+    font-size:17px;
+    margin: 4px 0 4px;
+    line-height:1.3;
+  }
+  .card .by{
+    font-family:'Caveat', cursive;
+    font-size:18px;
+    color: var(--ink-soft);
+    margin:0;
+  }
+
+  /* ---------- Add button ---------- */
+  .add-btn{
+    position:fixed;
+    right: 26px;
+    bottom: 26px;
+    background: var(--red-rule);
+    color:#fff;
+    border:none;
+    width:60px; height:60px;
+    border-radius:50%;
+    font-size:30px;
+    cursor:pointer;
+    box-shadow: 0 10px 22px rgba(0,0,0,0.35);
+    transition: transform .15s ease;
+    line-height:0;
+  }
+  .add-btn:hover{ transform: scale(1.07); }
+
+  /* ---------- Modal ---------- */
+  .overlay{
+    position:fixed; inset:0;
+    background: rgba(20,17,11,0.55);
+    display:none;
+    align-items:flex-start;
+    justify-content:center;
+    padding: 40px 16px;
+    overflow-y:auto;
+    z-index: 50;
+  }
+  .overlay.open{ display:flex; }
+  .modal{
+    background: var(--ivory);
+    max-width: 560px;
+    width:100%;
+    border-radius: 6px;
+    padding: 30px 28px 26px;
+    position:relative;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  }
+  .modal .close{
+    position:absolute; top:14px; right:16px;
+    background:none; border:none;
+    font-size:22px; cursor:pointer;
+    color: var(--ink-soft);
+    font-family:'Karla',sans-serif;
+  }
+  .modal h2{
+    font-family:'Special Elite', monospace;
+    margin: 6px 0 2px;
+    font-size:24px;
+  }
+  .modal .modal-by{
+    font-family:'Caveat', cursive;
+    font-size:20px;
+    color: var(--ink-soft);
+    margin: 0 0 14px;
+  }
+  .modal img.full{
+    width:100%;
+    max-height: 260px;
+    object-fit:cover;
+    border-radius:4px;
+    margin-bottom:16px;
+  }
+  .modal h4{
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color: var(--herb);
+    margin: 18px 0 6px;
+  }
+  .modal ul, .modal ol{ margin:0; padding-left:20px; line-height:1.7; }
+  .modal .notes{
+    font-family:'Caveat', cursive;
+    font-size: 20px;
+    line-height:1.4;
+    background: rgba(179,65,58,0.07);
+    border-left: 3px solid var(--red-rule);
+    padding: 10px 14px;
+    margin-top:8px;
+    white-space:pre-wrap;
+  }
+
+  /* ---------- Form ---------- */
+  form label{
+    display:block;
+    font-family:'Special Elite', monospace;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color: var(--herb);
+    margin: 14px 0 5px;
+  }
+  form input[type=text], form select, form textarea{
+    width:100%;
+    font-family:'Karla', sans-serif;
+    font-size:14px;
+    padding:9px 11px;
+    border:1px solid rgba(46,42,34,0.25);
+    border-radius:5px;
+    background:#fff;
+    color: var(--ink);
+    resize:vertical;
+  }
+  form textarea{ min-height:70px; }
+  form small{ color: var(--ink-soft); font-size:12px; }
+  .submit-btn{
+    margin-top:20px;
+    width:100%;
+    background: var(--herb);
+    color:#fff;
+    border:none;
+    padding:12px;
+    border-radius:6px;
+    font-family:'Special Elite', monospace;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .submit-btn:hover{ background: var(--sage-dark); }
+  .submit-btn:disabled{ opacity:0.6; cursor:default; }
+
+  .empty-state{
+    grid-column: 1 / -1;
+    text-align:center;
+    color: var(--ivory);
+    font-family:'Caveat', cursive;
+    font-size:26px;
+    padding: 40px 10px;
+    opacity:0.9;
+  }
+
+  @media (max-width:520px){
+    .toolbar{ flex-direction:column; align-items:stretch; }
+    .search-wrap input{ width:100%; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Est. whenever we finally made one</div>
+  <h1>The Family Recipe Box</h1>
+  <p class="tagline">passed down, written down, cooked forever</p>
+</header>
+
+<div class="toolbar">
+  <div class="tabs" id="tabs"></div>
+  <div class="search-wrap">
+    <span>🔎</span>
+    <input type="text" id="searchInput" placeholder="Search recipes or names...">
+  </div>
+</div>
+
+<div class="demo-banner" id="demoBanner" style="display:none;">
+  You're viewing <strong>demo mode</strong> — recipes added now won't be saved after you refresh.
+  Connect a free Firebase project and paste your config into <code>index.html</code> to make it permanent.
+  See <code>SETUP.md</code> for the 10-minute walkthrough.
+</div>
+
+<main id="cardGrid"></main>
+
+<button class="add-btn" id="openAddBtn" title="Add a recipe">+</button>
+
+<!-- View Recipe Modal -->
+<div class="overlay" id="viewOverlay">
+  <div class="modal" id="viewModal"></div>
+</div>
+
+<!-- Add Recipe Modal -->
+<div class="overlay" id="addOverlay">
+  <div class="modal">
+    <button class="close" id="closeAddBtn">✕</button>
+    <h2>File a new card</h2>
+    <p class="modal-by">Add it to the box for everyone</p>
+    <form id="recipeForm">
+      <label>Recipe name</label>
+      <input type="text" id="f_title" required placeholder="Grandma Rosa's Sunday Sauce">
+
+      <label>Category</label>
+      <select id="f_category">
+        <option>Breakfast</option>
+        <option>Mains</option>
+        <option>Sides</option>
+        <option>Desserts</option>
+        <option>Drinks</option>
+        <option>Other</option>
+      </select>
+
+      <label>Your name</label>
+      <input type="text" id="f_contributor" required placeholder="Who's adding this one?">
+
+      <label>Photo (optional)</label>
+      <input type="file" id="f_photo" accept="image/*">
+
+      <label>Ingredients <small>(one per line)</small></label>
+      <textarea id="f_ingredients" required placeholder="2 cups flour&#10;1 tsp salt&#10;..."></textarea>
+
+      <label>Steps <small>(one per line)</small></label>
+      <textarea id="f_steps" required placeholder="Preheat oven to 350°F&#10;Mix dry ingredients&#10;..."></textarea>
+
+      <label>Notes / story <small>(optional — the stuff that makes it yours)</small></label>
+      <textarea id="f_notes" placeholder="This is the one Dad always burns the garlic on..."></textarea>
+
+      <button type="submit" class="submit-btn" id="submitBtn">Add to the box</button>
+    </form>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, addDoc, updateDoc, doc,
+    onSnapshot, orderBy, query, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import {
+    getStorage, ref, uploadBytes, getDownloadURL
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+
+  // ============================================================
+  // 1. PASTE YOUR FIREBASE CONFIG HERE (see SETUP.md)
+  //    Until you do, the site runs in demo mode automatically.
+  // ============================================================
+  const firebaseConfig = {
+  apiKey: "AIzaSyBJJvilmSX4DnH3i87W_ARP_haDtM0sKog",
+  authDomain: "my-family-6891e.firebaseapp.com",
+  projectId: "my-family-6891e",
+  storageBucket: "my-family-6891e.firebasestorage.app",
+  messagingSenderId: "335445217626",
+  appId: "1:335445217626:web:1bf2f7db954be776102363",
+  measurementId: "G-B9XT05BT4F"
+};
+  const DEMO_MODE = firebaseConfig.apiKey === "YOUR_API_KEY";
+
+  const CATEGORY_COLORS = {
+    Breakfast: "#D3A23B",
+    Mains: "#B3413A",
+    Sides: "#56724A",
+    Desserts: "#7A4B5C",
+    Drinks: "#4B5A44",
+    Other: "#635C4C"
+  };
+
+  let db, storage;
+  let recipes = [];
+  let activeCategory = "All";
+  let searchTerm = "";
+
+  const cardGrid = document.getElementById('cardGrid');
+  const tabsEl = document.getElementById('tabs');
+  const demoBanner = document.getElementById('demoBanner');
+
+  const CATEGORIES = ["All","Breakfast","Mains","Sides","Desserts","Drinks","Other"];
+
+  function buildTabs(){
+    tabsEl.innerHTML = "";
+    CATEGORIES.forEach(cat => {
+      const btn = document.createElement('button');
+      btn.className = 'tab' + (cat === activeCategory ? ' active' : '');
+      btn.textContent = cat;
+      btn.onclick = () => { activeCategory = cat; buildTabs(); render(); };
+      tabsEl.appendChild(btn);
+    });
+  }
+
+  function render(){
+    const filtered = recipes.filter(r => {
+      const matchCat = activeCategory === "All" || r.category === activeCategory;
+      const matchSearch = !searchTerm ||
+        r.title.toLowerCase().includes(searchTerm) ||
+        (r.contributor || "").toLowerCase().includes(searchTerm);
+      return matchCat && matchSearch;
+    });
+
+    if (filtered.length === 0){
+      cardGrid.innerHTML = `<div class="empty-state">The box is empty here — be the first to add one!</div>`;
+      return;
+    }
+
+    cardGrid.innerHTML = "";
+    filtered.forEach((r, i) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const color = CATEGORY_COLORS[r.category] || "#635C4C";
+      card.innerHTML = `
+        <span class="tag" style="background:${color}">${r.category}</span>
+        ${r.photoUrl
+          ? `<img src="${r.photoUrl}" alt="${escapeHtml(r.title)}">`
+          : `<div class="photo-fallback">🍲</div>`}
+        <h3>${escapeHtml(r.title)}</h3>
+        <p class="by">added by ${escapeHtml(r.contributor || "someone")}</p>
+      `;
+      card.onclick = () => openView(r);
+      cardGrid.appendChild(card);
+    });
+  }
+
+  function escapeHtml(str){
+    const div = document.createElement('div');
+    div.textContent = str || "";
+    return div.innerHTML;
+  }
+
+  // ---------------- View modal ----------------
+  const viewOverlay = document.getElementById('viewOverlay');
+  const viewModal = document.getElementById('viewModal');
+
+  function openView(r){
+    const ingredients = (r.ingredients || []).map(i => `<li>${escapeHtml(i)}</li>`).join("");
+    const steps = (r.steps || []).map(s => `<li>${escapeHtml(s)}</li>`).join("");
+    viewModal.innerHTML = `
+      <button class="close" id="closeViewBtn">✕</button>
+      <h2>${escapeHtml(r.title)}</h2>
+      <p class="modal-by">added by ${escapeHtml(r.contributor || "someone")}</p>
+      ${r.photoUrl ? `<img class="full" src="${r.photoUrl}" alt="${escapeHtml(r.title)}">` : ""}
+      <h4>Ingredients</h4>
+      <ul>${ingredients}</ul>
+      <h4>Steps</h4>
+      <ol>${steps}</ol>
+      ${r.notes ? `<h4>Notes</h4><div class="notes">${escapeHtml(r.notes)}</div>` : ""}
+    `;
+    document.getElementById('closeViewBtn').onclick = closeView;
+    viewOverlay.classList.add('open');
+  }
+  function closeView(){ viewOverlay.classList.remove('open'); }
+  viewOverlay.addEventListener('click', e => { if (e.target === viewOverlay) closeView(); });
+
+  // ---------------- Add modal ----------------
+  const addOverlay = document.getElementById('addOverlay');
+  document.getElementById('openAddBtn').onclick = () => addOverlay.classList.add('open');
+  document.getElementById('closeAddBtn').onclick = () => addOverlay.classList.remove('open');
+  addOverlay.addEventListener('click', e => { if (e.target === addOverlay) addOverlay.classList.remove('open'); });
+
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchTerm = e.target.value.toLowerCase();
+    render();
+  });
+
+  // ---------------- Submit handling ----------------
+  const form = document.getElementById('recipeForm');
+  const submitBtn = document.getElementById('submitBtn');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Adding...";
+
+    const title = document.getElementById('f_title').value.trim();
+    const category = document.getElementById('f_category').value;
+    const contributor = document.getElementById('f_contributor').value.trim();
+    const ingredients = document.getElementById('f_ingredients').value.split("\n").map(s=>s.trim()).filter(Boolean);
+    const steps = document.getElementById('f_steps').value.split("\n").map(s=>s.trim()).filter(Boolean);
+    const notes = document.getElementById('f_notes').value.trim();
+    const photoFile = document.getElementById('f_photo').files[0];
+
+    try {
+      if (DEMO_MODE){
+        const photoUrl = photoFile ? URL.createObjectURL(photoFile) : null;
+        recipes.unshift({ title, category, contributor, ingredients, steps, notes, photoUrl });
+        render();
+      } else {
+        const docRef = await addDoc(collection(db, "recipes"), {
+          title, category, contributor, ingredients, steps, notes,
+          photoUrl: null,
+          createdAt: serverTimestamp()
+        });
+        if (photoFile){
+          const photoRef = ref(storage, `recipe-photos/${docRef.id}-${photoFile.name}`);
+          await uploadBytes(photoRef, photoFile);
+          const url = await getDownloadURL(photoRef);
+          await updateDoc(doc(db, "recipes", docRef.id), { photoUrl: url });
+        }
+      }
+      form.reset();
+      addOverlay.classList.remove('open');
+    } catch (err) {
+      alert("Something went wrong adding that recipe: " + err.message);
+      console.error(err);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Add to the box";
+    }
+  });
+
+  // ---------------- Init ----------------
+  function seedDemoRecipes(){
+    recipes = [
+      {
+        title: "Sunday Morning Pancakes",
+        category: "Breakfast",
+        contributor: "Mom",
+        ingredients: ["1 1/2 cups flour","1 tbsp sugar","2 tsp baking powder","1 1/4 cups milk","1 egg","2 tbsp melted butter"],
+        steps: ["Whisk dry ingredients together","Whisk in milk, egg, and butter until just combined","Cook on a hot griddle until bubbles form, then flip"],
+        notes: "Don't overmix — lumpy batter makes fluffier pancakes. This was your grandfather's rule.",
+        photoUrl: null
+      },
+      {
+        title: "Grandma Rosa's Sunday Sauce",
+        category: "Mains",
+        contributor: "Dad",
+        ingredients: ["2 cans crushed tomatoes","1 onion, diced","4 cloves garlic","Basil, oregano","Parmesan rind"],
+        steps: ["Saute onion and garlic until soft","Add tomatoes and herbs, simmer 2+ hours","Drop in the parmesan rind for the last hour"],
+        notes: "The parmesan rind is not optional. Ask me how I know.",
+        photoUrl: null
+      }
+    ];
+  }
+
+  if (DEMO_MODE){
+    demoBanner.style.display = 'block';
+    seedDemoRecipes();
+    buildTabs();
+    render();
+  } else {
+    const app = initializeApp(firebaseConfig);
+    db = getFirestore(app);
+    storage = getStorage(app);
+    buildTabs();
+    const q = query(collection(db, "recipes"), orderBy("createdAt", "desc"));
+    onSnapshot(q, snapshot => {
+      recipes = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+    }, err => {
+      console.error(err);
+      demoBanner.style.display = 'block';
+      demoBanner.textContent = "Couldn't connect to Firebase — check your config and Firestore/Storage rules in SETUP.md.";
+    });
+  }
+</script>
+
+</body>
+</html>
